@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanguard Art | Independent Creators</title>
+    <style>
+        :root {
+            --bg-color: #f4f5f6;
+            --surface-color: #ffffff;
+            --text-main: #222222;
+            --text-muted: #666666;
+            --accent: #e53935;
+            --accent-hover: #c62828;
+            --border: #e0e0e0;
+            --link-blue: #0056b3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 2rem;
+            max-width: 500px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg-color);
+            font-size: 1rem;
+        }
+
+        .nav-actions a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .nav-actions a.signup-btn {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0.8rem 2rem;
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .bottom-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .bottom-nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Main Layout */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        @media (max-width: 960px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Product Image & Info */
+        .product-section {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .artwork-image {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .product-details h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-details .artist {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-details p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Bidding Panel */
+        .bidding-panel {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-height: 800px;
+            position: sticky;
+            top: 120px;
+        }
+
+        .live-banner {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .current-bid-section {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .current-bid-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .current-bid-amount {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--text-main);
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .flash-update {
+            color: var(--accent) !important;
+            transform: scale(1.05);
+        }
+
+        .action-buttons {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .btn-bid {
+            width: 100%;
+            background-color: var(--text-main);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-bid:hover {
+            background-color: #444;
+        }
+
+        .bid-history-title {
+            padding: 1rem 2rem 0;
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .bid-history {
+            padding: 1rem 2rem;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .bid-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background-color: var(--bg-color);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bid-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bidder-name {
+            font-weight: bold;
+            color: var(--link-blue);
+        }
+
+        .bid-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .bidder-amount {
+            font-weight: bold;
+        }
+
+        /* Related Art Section */
+        .related-section {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--surface-color);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .related-section h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .art-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .art-card {
+            cursor: pointer;
+        }
+
+        .art-card img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .art-card:hover img {
+            transform: scale(1.03);
+        }
+
+        .art-card p {
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .modal-form input {
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .modal-form button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="top-bar">
+            <a href="#" class="logo fake-link">VANGUARD</a>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for art, creators, or tags...">
+            </div>
+            <div class="nav-actions">
+                <a href="#" class="fake-link">Sell Your Art</a>
+                <a href="#" class="fake-link">Log In</a>
+                <a href="#" class="signup-btn fake-link">Sign Up</a>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <a href="#" class="fake-link">Clothing</a>
+            <a href="#" class="fake-link">Stickers</a>
+            <a href="#" class="fake-link">Phone Cases</a>
+            <a href="#" class="fake-link">Wall Art</a>
+            <a href="#" class="fake-link">Home & Living</a>
+            <a href="#" class="fake-link">Kids</a>
+            <a href="#" class="fake-link">Accessories</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="product-section">
+            <!-- Using the direct image link -->
+            <img src="https://i.ibb.co/YBZD85y6/Fractured.jpg" alt="Fractured" class="artwork-image" onerror="this.src='https://picsum.photos/800/800?blur'">
+            
+            <div class="product-details">
+                <h1>Fractured</h1>
+                <div class="artist">By <a href="#" class="fake-link" style="color: var(--link-blue); text-decoration: none;">Greg Antons</a> (b. 1986)</div>
+                
+                <h3>Description</h3>
+                <p>This piece captures the essence of disjointed reality. Perfect for modern living spaces or offices that need a touch of vibrant, structural chaos.</p>
+                <p><strong>Medium:</strong> Acrylic Aerosol on Canvas</p>
+                <p><strong>Tags:</strong> #abstract #geometric #modern #colorblock</p>
+            </div>
+        </div>
+
+        <div>
+            <div class="bidding-panel">
+                <div class="live-banner">
+                    <div class="dot"></div> Live Original Auction
+                </div>
+
+                <div class="current-bid-section">
+                    <div class="current-bid-label">Current Top Bid</div>
+                    <div class="current-bid-amount" id="currentBidDisplay">$0</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-bid fake-link">Place Bid</button>
+                </div>
+
+                <div class="bid-history-title">Recent Activity</div>
+                <div class="bid-history" id="bidHistoryContainer">
+                    <!-- Bid rows injected via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="related-section">
+            <h2>More from other artists</h2>
+            <div class="art-grid">
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang1/300/300" alt="Art">
+                    <p>Neon Resonance</p>
+                </div>
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang2/300/300" alt="Art">
+                    <p>Structural Decay</p>
+                </div>
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang3/300/300" alt="Art">
+                    <p>Void Walker</p>
+                </div>
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang4/300/300" alt="Art">
+                    <p>Horizon Line</p>
+                </div>
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang5/300/300" alt="Art">
+                    <p>Crimson Shift</p>
+                </div>
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang6/300/300" alt="Art">
+                    <p>Urban Geometry</p>
+                </div>
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang7/300/300" alt="Art">
+                    <p>Silent Echoes</p>
+                </div>
+                <div class="art-card fake-link">
+                    <img src="https://picsum.photos/seed/vang8/300/300" alt="Art">
+                    <p>Temporal Distortion</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fake Login Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <h2>Join Vanguard</h2>
+            <form class="modal-form" id="rickrollForm">
+                <input type="email" placeholder="Email address" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Changed storage key to force a fresh state with the new values
+        const STORAGE_KEY = 'vanguard_vault_state_v3';
+        const BIDDERS = ["S. Cooper", "J. Davis", "L. Chen", "M. Vance", "E. Thorne", "R. Sterling", "A. Wright", "K. Patel"];
+        
+        const currentBidDisplay = document.getElementById('currentBidDisplay');
+        const historyContainer = document.getElementById('bidHistoryContainer');
+        let auctionTimer;
+
+        // Base history generation logic to fulfill the 18 count and specific $650 requirement
+        function generateInitialHistory() {
+            let history = [];
+            let currentAmt = 684;
+            
+            // Build the top 5 bids down to 650
+            let amounts = [684, 678, 670, 665, 655];
+            let times = ["Just now", "2 mins ago", "15 mins ago", "42 mins ago", "1 hour ago"];
+            
+            for(let i=0; i<amounts.length; i++) {
+                history.push({
+                    name: BIDDERS[Math.floor(Math.random() * BIDDERS.length)],
+                    amount: amounts[i],
+                    time: times[i],
+                    id: Date.now() - (i * 1000)
+                });
+            }
+
+            // Inject the specifically requested bid
+            history.push({
+                name: "GuestUser99",
+                amount: 650,
+                time: "Today at 2:48pm",
+                id: Date.now() - 50000
+            });
+
+            // Fill the rest to reach ~17 bids
+            let fillerAmt = 645;
+            for(let i=0; i<11; i++) {
+                fillerAmt -= Math.floor(Math.random() * 8) + 2;
+                // Generate descending morning times
+                let hour = 11 - Math.floor(i / 3);
+                let minute = 59 - (i * 5 % 60);
+                let minStr = minute < 10 ? '0' + minute : minute;
+
+                history.push({
+                    name: Math.random() > 0.2 ? BIDDERS[Math.floor(Math.random() * BIDDERS.length)] : "Anonymous",
+                    amount: fillerAmt,
+                    time: `Today at ${hour}:${minStr}am`,
+                    id: Date.now() - (100000 + i*1000)
+                });
+            }
+
+            // The absolute first bid
+            fillerAmt -= Math.floor(Math.random() * 10) + 5;
+            history.push({
+                name: "Opening Bid",
+                amount: fillerAmt,
+                time: "Today at 9:32am",
+                id: Date.now() - 500000
+            });
+            
+            return {
+                currentBid: 684,
+                history: history
+            };
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function getAuctionState() {
+            try {
+                const savedState = localStorage.getItem(STORAGE_KEY);
+                if (savedState) {
+                    return JSON.parse(savedState);
+                }
+            } catch (e) {
+                console.warn("Local storage parsing failed.");
+            }
+            return generateInitialHistory();
+        }
+
+        function saveAuctionState(state) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                // Ignore
+            }
+        }
+
+        function renderUI(state, highlight = false) {
+            currentBidDisplay.innerText = formatCurrency(state.currentBid);
+            
+            if (highlight) {
+                currentBidDisplay.classList.add('flash-update');
+                setTimeout(() => {
+                    currentBidDisplay.classList.remove('flash-update');
+                }, 200);
+            }
+
+            historyContainer.innerHTML = '';
+            
+            state.history.forEach(bid => {
+                const row = document.createElement('div');
+                row.className = 'bid-row';
+                row.innerHTML = `
+                    <div class="bid-left">
+                        <span class="bidder-name">${bid.name}</span>
+                        <span class="bid-time">${bid.time}</span>
+                    </div>
+                    <span class="bidder-amount">${formatCurrency(bid.amount)}</span>
+                `;
+                historyContainer.appendChild(row);
+            });
+        }
+
+        function simulateIncomingBid() {
+            const state = getAuctionState();
+            const lastBidder = state.history[0].name;
+            
+            // Pick a new bidder that isn't the immediate previous one
+            let newBidder;
+            do {
+                newBidder = BIDDERS[Math.floor(Math.random() * BIDDERS.length)];
+            } while (newBidder === lastBidder);
+            
+            // Increment by small random amount
+            const jump = Math.floor(Math.random() * 15) + 2; 
+            state.currentBid += jump;
+            
+            state.history.unshift({
+                name: newBidder,
+                amount: state.currentBid,
+                time: "Just now",
+                id: Date.now()
+            });
+
+            if (state.history.length > 30) {
+                state.history.pop();
+            }
+
+            saveAuctionState(state);
+            renderUI(state, true);
+            
+            scheduleNextBid();
+        }
+
+        function scheduleNextBid() {
+            clearTimeout(auctionTimer);
+            // Random delay between 4 and 15 seconds
+            const delay = Math.floor(Math.random() * 11000) + 4000;
+            auctionTimer = setTimeout(simulateIncomingBid, delay);
+        }
+
+        // --- Fake Links & Rickroll Logic ---
+        const authModal = document.getElementById('authModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const rickrollForm = document.getElementById('rickrollForm');
+
+        document.querySelectorAll('.fake-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                authModal.classList.add('active');
+            });
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            authModal.classList.remove('active');
+        });
+
+        authModal.addEventListener('click', (e) => {
+            if(e.target === authModal) {
+                authModal.classList.remove('active');
+            }
+        });
+
+        rickrollForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1";
+        });
+
+        // Initialize
+        function init() {
+            const state = getAuctionState();
+            renderUI(state);
+            scheduleNextBid();
+        }
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                clearTimeout(auctionTimer);
+            } else {
+                scheduleNextBid();
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
